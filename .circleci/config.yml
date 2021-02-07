@@ -36,7 +36,7 @@ jobs:
           command: bundle exec rails db:migrate
       - run:
           name: Breakman
-          command: bundle exec brakeman -6 -A -w 1
+          command: bundle exec brakeman -6 -A -w1
       - run:
           name: rubocop
           command: bundle exec rubocop
