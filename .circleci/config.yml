@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   ruby: circleci/ruby@1.1.2
-  heroku: circleci/heroku@1.2.3
 
 jobs:
   build:
@@ -36,34 +35,13 @@ jobs:
           command: bundle exec rails db:migrate
       - run:
           name: Breakman
-          command: bundle exec brakeman -6 -A -w 1
+          command: bundle exec brakeman
       - run:
           name: rubocop
           command: bundle exec rubocop
       - run:
           name: RSpec
           command: bundle exec rspec
-
-  deploy:
-    docker:
-      - image: circleci/ruby:2.7
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 19.03.13
-      - heroku/install
-      - run:
-          name: heroku login
-          command: heroku container:login
-      - run:
-          name: push docker image
-          command: heroku container:push web -a $HEROKU_APP_NAME
-      - run:
-          name: release docker image
-          command: heroku container:release web -a $HEROKU_APP_NAME
-      - run:
-          name: database setup
-          command: heroku run bundle exec rake db:migrate RAILS_ENV=production -a $HEROKU_APP_NAME
 
 workflows:
   version: 2
@@ -73,9 +51,3 @@ workflows:
       - test:
           requires:
             - build
-      - deploy:
-          requires:
-            - test
-          filters:
-            branches:
-              only: main
