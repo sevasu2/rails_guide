@@ -9,8 +9,8 @@
     <th></th>
   </tr>
 
-  <%= @articles.each do |article| %>
     <tr>
+      <% @articles.each do |article| %>
       <td><%= article.title %></td>
       <td><%= article.text %></td>
       <td><%= link_to 'show', article_path(article) %></td>
